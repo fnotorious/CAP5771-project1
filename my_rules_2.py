@@ -9,28 +9,16 @@ if len(argv) != 5:
 
 # Prepare variables
 minsuppc, minconf, input_file, output_file = argv[1:5]
-minsuppc = int(minsuppc)
-minconf = int(minconf)
 freq_itemsets, cand_itemsets = {}, {}
 
-# Get candidate itemsets
-with open(input_file, "r") as ifile:
-    for line in ifile:
-        transaction_id, item_id = map(int, line.strip().split())
-        cand_itemsets[item_id] = cand_itemsets.get(item_id, 0) + 1
-
 # Function to generate frequent 1-itemsets
-def generate_frequent_1_itemsets(cand_itemsets):
+def generate_frequent_1_itemsets(input_file):
     freq_itemsets = {}
-    if minsuppc != -1:
-        for itemset, support_count in cand_itemsets.items():
-            if support_count >= minsuppc:
-                freq_itemsets[itemset] = support_count
-
+    with open(input_file, "r") as ifile:
+        for line in ifile:
+            transaction_id, item_id = map(int, line.strip().split())
+            freq_itemsets[item_id] = freq_itemsets.get(item_id, 0) + 1
     return freq_itemsets
-
-freq_itemsets = generate_frequent_1_itemsets(cand_itemsets)
-print(freq_itemsets)
 
 def generate_output_files(freq_itemsets, cand_itemsets, minconf, output_file, teamID):
     # Output file 1
