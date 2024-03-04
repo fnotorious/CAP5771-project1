@@ -29,9 +29,6 @@ def generate_frequent_1_itemsets(cand_itemsets):
 
     return freq_itemsets
 
-freq_itemsets = generate_frequent_1_itemsets(cand_itemsets)
-print(freq_itemsets)
-
 def generate_output_files(freq_itemsets, cand_itemsets, minconf, output_file, teamID):
     # Output file 1
     with open(f"{output_file}_items_2.txt", "w") as f:
