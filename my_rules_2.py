@@ -107,8 +107,24 @@ def generate_output_files(freq_itemsets, cand_itemsets, minconf, output_file, te
 freq_itemsets = generate_frequent_itemsets(input_file, minsuppc)
 generate_output_files(freq_itemsets, minconf, output_file)
 
-#Output 4 
-plt.bar(x, height, width, bottom, align) #need more information and what variables will be used 
+minsuppcs = [100, 130, 160]  # Values of minsuppc to iterate over
+num_frequent_itemsets = []  # To store the number of frequent itemsets found for each minsuppc
 
-#Output 5 
-plt.bar(x, height, width, bottom, align) #need more information and what variables will be used 
+# Iterate over each minsuppc value
+for minsuppc_value in minsuppcs:
+    # Generate frequent itemsets for the current minsuppc value
+    freq_itemsets = generate_frequent_itemsets(input_file, minsuppc_value)
+    
+    # Count the total number of frequent itemsets
+    total_frequent_itemsets = sum(len(itemsets) for itemsets in freq_itemsets.values())
+    
+    # Append the total number of frequent itemsets to the list
+    num_frequent_itemsets.append(total_frequent_itemsets)
+
+# Plot the results
+plt.plot(minsuppcs, num_frequent_itemsets, marker='o')
+plt.title('Number of Frequent Itemsets vs minsuppc')
+plt.xlabel('minsuppc')
+plt.ylabel('Number of Frequent Itemsets')
+plt.grid(True)
+plt.show()
