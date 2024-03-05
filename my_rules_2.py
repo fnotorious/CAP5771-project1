@@ -55,9 +55,10 @@ def generate_frequent_itemsets(input_file, minsuppc):
         if not candidates:
             break
         # Count support for candidates
-        freq_itemsets[k] = count_support(input_file, candidates)
-        # Prune
-        freq_itemsets[k] = prune_itemsets(freq_itemsets[k], minsuppc)
+        #code 5 section edited
+        support_counts = count_support(input_file, [set(c) for c in candidates])
+        # Prune candidates based on minimum support
+        freq_itemsets[k] = {itemset: support for itemset, support in support_counts.items() if support >= minsuppc}
         if not freq_itemsets[k]:
             break
         k += 1
