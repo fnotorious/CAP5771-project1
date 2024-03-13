@@ -1,0 +1,18 @@
+minsuppc: 130
+minconf: 0.84
+input file: small.txt
+output name: output
+Number of items: 65
+Number of transactions: 3056
+The length of the longest transaction: 84
+The length of the largest frequent k-itemset: 65
+Number of frequent 1-itemsets: 65
+Number of frequent 2-itemsets: 53
+Number of frequent 1-itemsets: 65
+Number of frequent 2-itemsets: 53
+Number of frequent 3-itemsets: 4
+Number of frequent 4-itemsets: 0
+Total number of frequent itemsets: 122
+Number of high confidence rules: 6
+The rule with the highest confidence: 58 326|1|143|0.899
+Time taken to generate frequent itemsets: 2.471501111984253 seconds
