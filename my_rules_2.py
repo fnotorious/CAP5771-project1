@@ -1,6 +1,7 @@
 from sys import argv
 from itertools import combinations
 import matplotlib.pyplot as plt
+import time
 
 input_file = 'test/small.txt'
 
@@ -15,6 +16,7 @@ def read_input_file(input_file):
     return transactions
 
 def generate_frequent_itemsets(transactions, minsuppc):
+    start_time = time.time()
     freq_itemsets = {}
     item_counts = {}
     
@@ -50,7 +52,9 @@ def generate_frequent_itemsets(transactions, minsuppc):
 
         k += 1
 
-    return freq_itemsets
+    end_time = time.time()
+    execution_time = end_time - start_time
+    return freq_itemsets, execution_time
 
 def generate_association_rules(freq_itemsets, minconf):
     association_rules = []
@@ -76,7 +80,7 @@ def write_output_files(freq_itemsets, association_rules, minsuppc, minconf, inpu
         with open(f"{output_file}_rules_2.txt", "w") as file:
             for rule in association_rules:
                 lhs, rhs, support, confidence = rule
-                file.write(f"{' '.join(map(str, lhs))}|{' '.join(map(str, rhs))}|{support}|{confidence}\n")
+                file.write(f"{' '.join(map(str, lhs))}|{' '.join(map(str, rhs))}|{support}|{confidence:.3f}\n")
 
     with open(f"{output_file}_info_2.txt", "w") as file:
         file.write(f"minsuppc: {minsuppc}\n")
@@ -89,17 +93,24 @@ def write_output_files(freq_itemsets, association_rules, minsuppc, minconf, inpu
         file.write(f"The length of the largest frequent k-itemset: {max(len(itemset) for itemset in freq_itemsets.values())}\n")
         file.write(f"Number of frequent 1-itemsets: {len(freq_itemsets[1])}\n")
         file.write(f"Number of frequent 2-itemsets: {len(freq_itemsets.get(2, []))}\n")
+        
+        # Write the number of frequent k-itemsets inside the with block
         for k, itemsets in freq_itemsets.items():
             file.write(f"Number of frequent {k}-itemsets: {len(itemsets)}\n")
+        
         file.write(f"Total number of frequent itemsets: {sum(len(itemsets) for itemsets in freq_itemsets.values())}\n")
+        
         if association_rules:
             file.write(f"Number of high confidence rules: {len(association_rules)}\n")
             highest_confidence_rule = max(association_rules, key=lambda x: x[3])
             lhs, rhs, support, confidence = highest_confidence_rule
-            file.write(f"The rule with the highest confidence: {' '.join(map(str, lhs))}|{' '.join(map(str, rhs))}|{support}|{confidence}\n")
+            file.write(f"The rule with the highest confidence: {' '.join(map(str, lhs))}|{' '.join(map(str, rhs))}|{support}|{confidence:.3f}\n")
         else:
             file.write("Number of high confidence rules: 0\n")
             file.write("The rule with the highest confidence: None\n")
+        
+        file.write(f"Time taken to generate frequent itemsets: {execution_time} seconds\n")
+
 
 def plot_frequent_itemsets(freq_itemsets, minsuppcs, output_file):
     num_frequent_itemsets = [sum(len(itemsets) for itemsets in freq_itemsets.values()) for minsuppc in minsuppcs]
@@ -118,10 +129,10 @@ if len(argv) != 5:
 
 minsuppc, minconf, input_file, output_file = argv[1:5]
 
-transactions = read_input_file(input_file)
-freq_itemsets = generate_frequent_itemsets(transactions, int(minsuppc))
+transactions = read_input_file(input_file) 
+freq_itemsets, execution_time = generate_frequent_itemsets(transactions, int(minsuppc))
 association_rules = generate_association_rules(freq_itemsets, float(minconf))
 write_output_files(freq_itemsets, association_rules, int(minsuppc), float(minconf), input_file, output_file)
 
-minsuppcs = [100, 130, 160]
+minsuppcs = [70, 100, 130, 160]
 plot_frequent_itemsets(freq_itemsets, minsuppcs, output_file)
